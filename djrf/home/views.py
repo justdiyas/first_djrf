@@ -27,15 +27,33 @@ def index(request):
         return Response(courses)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def person(request):
     if request.method == 'GET':
         person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
         return Response(serializer.data)
-    else:
+    elif request.method == 'POST':
         data = request.data
         serializer = PersonSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+    elif request.method == 'PUT':
+        data = request.data
+        person = Person.objects.get(id=data.get('id'))
+        serializer = PersonSerializer(person, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+    elif request.method == 'PATCH':
+        data = request.data
+        person = Person.objects.get(name=data.get('name'))
+        serializer = PersonSerializer(person, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
