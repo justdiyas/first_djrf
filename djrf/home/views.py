@@ -5,29 +5,6 @@ from .serializers import PersonSerializer
 from django.shortcuts import get_object_or_404
 
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def index(request):
-    courses = {
-        'course_name': 'Python Backend Development',
-        'course_difficulty': 'Easy to Medium',
-        'course_subjects': ['Python Fundamentals', 'Django', ' Django RestFrameWork', 'SQL basics']
-    }
-    if request.method == 'GET':
-        print('You get the data via GET request')
-        return Response(courses)
-    elif request.method == 'POST':
-        data = request.data
-        print('You updated the data via POST request')
-        print(data)
-        return Response(courses)
-    elif request.method == 'PUT':
-        print('You modified the data via PUT request')
-        return Response(courses)
-    elif request.method == 'DELETE':
-        print('You deleted the data via DELETE request')
-        return Response(courses)
-
-
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
 def person(request):
     if request.method == 'GET':
