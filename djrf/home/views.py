@@ -1,5 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .models import Person
+from .serializers import PersonSerializer
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def index(request):
@@ -23,3 +26,18 @@ def index(request):
         print('You deleted the data via DELETE request')
         return Response(courses)
 
+
+@api_view(['GET', 'POST'])
+def person(request):
+    if request.method == 'GET':
+        person = Person.objects.all()
+        serializer = PersonSerializer(person, many=True)
+        return Response(serializer.data)
+    else:
+        data = request.data
+        serializer = PersonSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
