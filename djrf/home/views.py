@@ -4,6 +4,7 @@ from .models import Person
 from .serializers import PersonSerializer
 from django.shortcuts import get_object_or_404
 
+
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def index(request):
     courses = {
@@ -27,7 +28,7 @@ def index(request):
         return Response(courses)
 
 
-@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@api_view(['GET', 'POST', 'PUT', 'PATCH'])
 def person(request):
     if request.method == 'GET':
         person = Person.objects.all()
@@ -50,7 +51,7 @@ def person(request):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
-    elif request.method == 'PATCH':
+    else:
         data = request.data
         person = Person.objects.get(name=data.get('name'))
         serializer = PersonSerializer(person, data=data, partial=True)
@@ -59,3 +60,14 @@ def person(request):
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
+
+
+@api_view(['GET', 'DELETE'])
+def person_delete(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    if request.method == 'GET':
+        serializer = PersonSerializer(person)
+        return Response(serializer.data)
+    else:
+        person.delete()
+        return Response(f'{person} has been deleted!')
