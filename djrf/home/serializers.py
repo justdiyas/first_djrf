@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import Person
+from .models import Person, Sport
 
+class SportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sport
+        fields = ['sport_name']
 
 class PersonSerializer(serializers.ModelSerializer):
+    sport = SportSerializer()
     class Meta:
         model = Person
         fields = '__all__'
+        # depth = 1
 
     def validate(self, data):
         special_characters = '~`!@#$%^&*()_-+={}[]|:;"<,>.?/'
