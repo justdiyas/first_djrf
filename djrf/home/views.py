@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
 def person(request):
     if request.method == 'GET':
-        person = Person.objects.filter(sport__isnull=False)
+        person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
