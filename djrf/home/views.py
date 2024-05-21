@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from .models import Person
 from .serializers import PersonSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
@@ -62,7 +63,6 @@ def login(request):
 
 
 class PersonView(APIView):
-
     def get(self, request):
         person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
@@ -94,8 +94,19 @@ class PersonView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+
 class PersonDeleteView(APIView):
+    def get(self, request, id):
+        person = get_object_or_404(Person, id=id)
+        serializer = PersonSerializer(person)
+        return Response(serializer.data)
+
     def delete(self, request, id):
         person = Person.objects.get(id=id)
         person.delete()
         return Response(f'Data on {person} has been deleted from database.')
+
+
+class PersonViewSet(viewsets.ModelViewSet):
+    serializer_class = PersonSerializer
+    queryset = Person.objects.all()
