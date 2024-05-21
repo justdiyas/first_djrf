@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Person
 from .serializers import PersonSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
@@ -56,5 +57,39 @@ def login(request):
     serializer = LoginSerializer(data=data)
     if serializer.is_valid():
         data = serializer.validated_data
-        return Response(data)
+        return Response('Success!')
     return Response(serializer.errors)
+
+
+class PersonView(APIView):
+
+    def get(self, request):
+        person = Person.objects.all()
+        serializer = PersonSerializer(person, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        serializer = PersonSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def put(self, request):
+        data = request.data
+        person = Person.objects.get(id=data.get('id'))
+        serializer = PersonSerializer(person, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def patch(self, request):
+        data = request.data
+        person = Person.objecs.get(id=data.get('id'))
+        serializer = PersonSerializer(person, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)

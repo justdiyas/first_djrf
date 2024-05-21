@@ -5,4 +5,5 @@ urlpatterns = [
     path('person/', views.person, name='person_api'),
     path('person/<int:person_id>/', views.person_delete, name='person_delete_api'),
     path('login/', views.login, name='login'),
+    path('person-view/', views.PersonView.as_view(), name='person_view'),
 ]
