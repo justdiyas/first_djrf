@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Person
-from .serializers import PersonSerializer
+from .serializers import PersonSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
 
 
@@ -48,3 +48,13 @@ def person_delete(request, person_id):
     else:
         person.delete()
         return Response(f'{person} has been deleted!')
+
+
+@api_view(['POST'])
+def login(request):
+    data = request.data
+    serializer = LoginSerializer(data=data)
+    if serializer.is_valid():
+        data = serializer.validated_data
+        return Response(data)
+    return Response(serializer.errors)
