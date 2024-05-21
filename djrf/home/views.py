@@ -93,3 +93,9 @@ class PersonView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+class PersonDeleteView(APIView):
+    def delete(self, request, id):
+        person = Person.objects.get(id=id)
+        person.delete()
+        return Response(f'Data on {person} has been deleted from database.')
