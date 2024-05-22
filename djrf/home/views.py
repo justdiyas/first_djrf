@@ -110,3 +110,13 @@ class PersonDeleteView(APIView):
 class PersonViewSet(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     queryset = Person.objects.all()
+
+    def list(self, request):
+        search = request.GET.get('search')
+        queryset = self.queryset
+        if search:
+            queryset = queryset.filter(name__startswith=search)
+        serializer = PersonSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
