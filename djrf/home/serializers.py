@@ -1,5 +1,25 @@
 from rest_framework import serializers
 from .models import Person, Sport
+from django.contrib.auth.models import User
+
+class RegisterUser(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        if data['username']:
+            if User.objects.filter(username=data['username']).exists():
+                raise serializers.ValidationError('Given username already exists')
+        if data['email']:
+            if User.objects.filter(email=data['email']).exists():
+                raise serializers.ValidationError('Given email already exists')
+        return data
+
+    def create(self, validated_data):
+        user = User.objects.create(**validated_data)
+        user.set_password(validated_data.get('password'))
+        return user
 
 
 class SportSerializer(serializers.ModelSerializer):

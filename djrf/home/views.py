@@ -4,8 +4,18 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
 from .models import Person
-from .serializers import PersonSerializer, LoginSerializer
+from .serializers import PersonSerializer, LoginSerializer, RegisterUser
 from django.shortcuts import get_object_or_404
+
+
+class UserRegisterAPI(APIView):
+    def post(self, request):
+        serializer = RegisterUser(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('User successfully created!')
+        return Response(serializer.errors)
+
 
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
@@ -63,7 +73,7 @@ def login(request):
     return Response(serializer.errors)
 
 
-class PersonView(APIView):
+class PersonAPI(APIView):
     def get(self, request):
         person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
@@ -96,7 +106,7 @@ class PersonView(APIView):
         return Response(serializer.errors)
 
 
-class PersonDeleteView(APIView):
+class PersonDeleteAPI(APIView):
     def get(self, request, id):
         person = get_object_or_404(Person, id=id)
         serializer = PersonSerializer(person)
@@ -108,7 +118,7 @@ class PersonDeleteView(APIView):
         return Response(f'Data on {person} has been deleted from database.', status=status.HTTP_202_ACCEPTED)
 
 
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonViewSetAPI(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     queryset = Person.objects.all()
 
