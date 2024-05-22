@@ -1,24 +1,16 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Person
 from .serializers import PersonSerializer, LoginSerializer, RegisterUser
 from django.shortcuts import get_object_or_404
 
 
-class UserRegisterAPI(APIView):
-    def post(self, request):
-        serializer = RegisterUser(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response('User successfully created!')
-        return Response(serializer.errors)
-
-
-
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def person(request):
     if request.method == 'GET':
         person = Person.objects.all()
@@ -53,6 +45,7 @@ def person(request):
 
 
 @api_view(['GET', 'DELETE'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def person_delete(request, person_id):
     person = get_object_or_404(Person, id=person_id)
     if request.method == 'GET':
@@ -63,17 +56,8 @@ def person_delete(request, person_id):
         return Response(f'{person} has been deleted!')
 
 
-@api_view(['POST'])
-def login(request):
-    data = request.data
-    serializer = LoginSerializer(data=data)
-    if serializer.is_valid():
-        data = serializer.validated_data
-        return Response('Success!')
-    return Response(serializer.errors)
-
-
 class PersonAPI(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get(self, request):
         person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
@@ -107,6 +91,7 @@ class PersonAPI(APIView):
 
 
 class PersonDeleteAPI(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
     def get(self, request, id):
         person = get_object_or_404(Person, id=id)
         serializer = PersonSerializer(person)
@@ -121,6 +106,7 @@ class PersonDeleteAPI(APIView):
 class PersonViewSetAPI(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     queryset = Person.objects.all()
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def list(self, request):
         search = request.GET.get('search')
@@ -131,3 +117,18 @@ class PersonViewSetAPI(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class UserRegisterAPI(APIView):
+    def post(self, request):
+        serializer = RegisterUser(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('User successfully created!')
+        return Response(serializer.errors)
+
+
+class UserLoginAPI(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(f'{request.user} is logged in')
+        return Response(serializer.errors)
