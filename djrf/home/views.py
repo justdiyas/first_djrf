@@ -107,7 +107,6 @@ class PersonViewSetAPI(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     queryset = Person.objects.all()
     permission_classes = [IsAuthenticated, IsAdminUser]
-
     def list(self, request):
         search = request.GET.get('search')
         queryset = self.queryset
