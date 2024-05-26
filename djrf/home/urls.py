@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('person-viewset', views.PersonViewSetAPI, basename='person')
-router.register('sport', views.SportListAPI, basename='sport')
+router.register('sports', views.SportListAPI, basename='sport')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -14,4 +14,6 @@ urlpatterns = [
     path('person-view/', views.PersonAPI.as_view(), name='person_view'),
     path('person-view/<int:pk>', views.PersonDetailAPI.as_view(), name='person_delete'),
     path('user-register/', views.UserRegisterAPI.as_view(), name='user_register'),
+    path('mountains/', views.MountainListAPI.as_view(), name='mountain'),
+    path('mountains/<int:pk>/', views.MountainDetailAPI.as_view(), name='mountain_detail'),
 ]

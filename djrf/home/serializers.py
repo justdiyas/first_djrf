@@ -77,5 +77,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class MountainSerializer(serializers.ModelSerializer):
-    model = Mountain
-    fields = '__all__'
+    class Meta:
+        model = Mountain
+        fields = '__all__'

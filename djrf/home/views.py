@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import viewsets, status, generics
-from .models import Person, Sport
-from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer
+from .models import Person, Sport, Mountain
+from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer, MountainSerializer
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
@@ -149,3 +149,11 @@ class SportListAPI(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
+class MountainListAPI(generics.ListCreateAPIView):
+    queryset = Mountain.objects.all()
+    serializer_class = MountainSerializer
+
+
+class MountainDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Mountain.objects.all()
+    serializer_class = MountainSerializer
