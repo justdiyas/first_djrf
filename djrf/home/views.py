@@ -71,24 +71,8 @@ class PersonAPI(APIView):
             return Responses(serializer.data)
         return Response(serializer.errors)
 
-    def put(self, request):
-        person = Person.objects.get(id=request.data.get('id'))
-        serializer = PersonSerializer(person, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
 
-    def patch(self, request):
-        person = Person.objects.get(id=request.data.get('id'))
-        serializer = PersonSerializer(person, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
-
-
-class PersonDeleteAPI(APIView):
+class PersonDetailAPI(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     def get_object(self, pk):
         try:
@@ -101,6 +85,24 @@ class PersonDeleteAPI(APIView):
         person = self.get_object(pk)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        # person = Person.objects.get(id=request.data.get('id'))
+        person = self.get_object(pk)
+        serializer = PersonSerializer(person, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def patch(self, request, pk):
+        # person = Person.objects.get(id=request.data.get('id'))
+        person = self.get_object(pk)
+        serializer = PersonSerializer(person, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
     def delete(self, request, pk):
         # person = get_object_or_404(Person, id=id)
