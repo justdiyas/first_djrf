@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Person, Sport
+from .models import Person, Sport, Mountain
 from django.contrib.auth.models import User
 
 class RegisterUser(serializers.Serializer):
@@ -75,3 +75,7 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
+
+class MountainSerializer(serializers.ModelSerializer):
+    model = Mountain
+    fields = '__all__'

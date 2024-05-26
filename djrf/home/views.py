@@ -1,9 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import viewsets, status, generics
 from .models import Person, Sport
 from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer
 from django.shortcuts import get_object_or_404
@@ -59,6 +58,7 @@ def person_delete(request, person_id):
 
 class PersonAPI(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
+
     def get(self, request):
         person = Person.objects.all()
         serializer = PersonSerializer(person, many=True)
@@ -74,6 +74,7 @@ class PersonAPI(APIView):
 
 class PersonDetailAPI(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
+
     def get_object(self, pk):
         try:
             person = Person.objects.get(id=pk)
@@ -146,3 +147,5 @@ class SportListAPI(viewsets.ModelViewSet):
     queryset = Sport.objects.all()
     serializer_class = SportSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+
