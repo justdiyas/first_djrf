@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Person
 from .serializers import PersonSerializer, LoginSerializer, RegisterUser
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
@@ -64,26 +65,23 @@ class PersonAPI(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        data = request.data
-        serializer = PersonSerializer(data=data)
+        serializer = PersonSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Responses(serializer.data)
         return Response(serializer.errors)
 
     def put(self, request):
-        data = request.data
-        person = Person.objects.get(id=data.get('id'))
-        serializer = PersonSerializer(person, data=data)
+        person = Person.objects.get(id=request.data.get('id'))
+        serializer = PersonSerializer(person, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
     def patch(self, request):
-        data = request.data
-        person = Person.objecs.get(id=data.get('id'))
-        serializer = PersonSerializer(person, data=data, partial=True)
+        person = Person.objects.get(id=request.data.get('id'))
+        serializer = PersonSerializer(person, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -92,13 +90,21 @@ class PersonAPI(APIView):
 
 class PersonDeleteAPI(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
-    def get(self, request, id):
-        person = get_object_or_404(Person, id=id)
+    def get_object(self, pk):
+        try:
+            person = Person.objects.get(id=pk)
+            return person
+        except Person.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        person = self.get_object(pk)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
 
-    def delete(self, request, id):
-        person = get_object_or_404(Person, id=id)
+    def delete(self, request, pk):
+        # person = get_object_or_404(Person, id=id)
+        person = self.get_object(pk)
         person.delete()
         return Response(f'Data on {person} has been deleted from database.', status=status.HTTP_202_ACCEPTED)
 
