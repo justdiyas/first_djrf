@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from .models import Person
-from .serializers import PersonSerializer, LoginSerializer, RegisterUser
+from .models import Person, Sport
+from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
@@ -115,13 +115,14 @@ class PersonViewSetAPI(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     queryset = Person.objects.all()
     permission_classes = [IsAuthenticated, IsAdminUser]
-    def list(self, request):
-        search = request.GET.get('search')
-        queryset = self.queryset
-        if search:
-            queryset = queryset.filter(name__startswith=search)
-        serializer = PersonSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # def list(self, request):
+    #     search = request.GET.get('search')
+    #     queryset = self.queryset
+    #     if search:
+    #         queryset = queryset.filter(name__startswith=search)
+    #     serializer = PersonSerializer(queryset, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserRegisterAPI(APIView):
@@ -139,3 +140,9 @@ class UserLoginAPI(APIView):
         if serializer.is_valid():
             return Response(f'{request.user} is logged in')
         return Response(serializer.errors)
+
+
+class SportListAPI(viewsets.ModelViewSet):
+    queryset = Sport.objects.all()
+    serializer_class = SportSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser]

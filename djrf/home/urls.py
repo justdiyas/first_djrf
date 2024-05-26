@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('person-viewset', views.PersonViewSetAPI, basename='person')
+router.register('sport', views.SportListAPI, basename='sport')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -26,7 +26,7 @@ class RegisterUser(serializers.Serializer):
 class SportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sport
-        fields = ['sport_name']
+        fields = '__all__'
 
 
 class PersonSerializer(serializers.ModelSerializer):
