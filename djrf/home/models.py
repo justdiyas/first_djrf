@@ -18,6 +18,7 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
+
 class Mountain(models.Model):
     peak = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
@@ -25,3 +26,12 @@ class Mountain(models.Model):
 
     def __str__(self):
         return self.peak
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+    area = models.CharField(max_length=200)
+    founded = models.IntegerField()
+    employee = models.IntegerField()
+    owner = models.ForeignKey('auth.User', related_name='company', on_delete=models.CASCADE)
+    
