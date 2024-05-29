@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework import viewsets, status, generics
 from .models import Person, Sport, Mountain, Company
 from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer, MountainSerializer, CompanySerializer, UserSerializer
@@ -163,18 +163,23 @@ class MountainDetailAPI(generics.RetrieveUpdateDestroyAPIView):
 class CompanyListAPI(generics.ListCreateAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class CompanyDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class UserListAPI(generics.ListCreateAPIView):
+class UserListAPI(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class UserDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+class UserDetailAPI(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

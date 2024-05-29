@@ -34,4 +34,6 @@ class Company(models.Model):
     founded = models.IntegerField()
     employee = models.IntegerField()
     owner = models.ForeignKey('auth.User', related_name='company', on_delete=models.CASCADE)
-    
+
+    def __str__(self):
+        return self.name

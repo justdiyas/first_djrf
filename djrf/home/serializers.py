@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Person, Sport, Mountain, Company
 from django.contrib.auth.models import User
 
+
 class RegisterUser(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField()
@@ -83,9 +84,12 @@ class MountainSerializer(serializers.ModelSerializer):
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = Company
         fields = '__all__'
+
 
 class UserSerializer(serializers.ModelSerializer):
     company = serializers.PrimaryKeyRelatedField(many=True, queryset=Company.objects.all())
