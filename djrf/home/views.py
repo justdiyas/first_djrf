@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import viewsets, status, generics
-from .models import Person, Sport, Mountain
+from .models import Person, Sport, Mountain, Company
 from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer, MountainSerializer, CompanySerializer
 from django.shortcuts import get_object_or_404
 from django.http import Http404
@@ -158,3 +158,12 @@ class MountainDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Mountain.objects.all()
     serializer_class = MountainSerializer
 
+
+class CompanyListAPI(generics.ListCreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+
+
+class CompanyDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer

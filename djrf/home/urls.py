@@ -16,4 +16,6 @@ urlpatterns = [
     path('user-register/', views.UserRegisterAPI.as_view(), name='user_register'),
     path('mountains/', views.MountainListAPI.as_view(), name='mountain'),
     path('mountains/<int:pk>/', views.MountainDetailAPI.as_view(), name='mountain_detail'),
+    path('companies/', views.CompanyListAPI.as_view(), name='company'),
+    path('companies/<int:pk>/', views.CompanyDetailAPI.as_view(), name='company_detail'),
 ]
