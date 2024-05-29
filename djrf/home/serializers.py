@@ -86,3 +86,10 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    company = serializers.PrimaryKeyRelatedField(many=True, queryset=Company.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'company']

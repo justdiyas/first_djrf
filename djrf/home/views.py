@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import viewsets, status, generics
 from .models import Person, Sport, Mountain, Company
-from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer, MountainSerializer, CompanySerializer
+from .serializers import PersonSerializer, LoginSerializer, RegisterUser, SportSerializer, MountainSerializer, CompanySerializer, UserSerializer
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
@@ -167,3 +168,13 @@ class CompanyListAPI(generics.ListCreateAPIView):
 class CompanyDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+
+
+class UserListAPI(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

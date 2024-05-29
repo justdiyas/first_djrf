@@ -14,8 +14,10 @@ urlpatterns = [
     path('person-view/', views.PersonAPI.as_view(), name='person_view'),
     path('person-view/<int:pk>', views.PersonDetailAPI.as_view(), name='person_delete'),
     path('user-register/', views.UserRegisterAPI.as_view(), name='user_register'),
-    path('mountains/', views.MountainListAPI.as_view(), name='mountain'),
+    path('mountains/', views.MountainListAPI.as_view(), name='mountains'),
     path('mountains/<int:pk>/', views.MountainDetailAPI.as_view(), name='mountain_detail'),
-    path('companies/', views.CompanyListAPI.as_view(), name='company'),
+    path('companies/', views.CompanyListAPI.as_view(), name='companies'),
     path('companies/<int:pk>/', views.CompanyDetailAPI.as_view(), name='company_detail'),
+    path('users/', views.UserListAPI.as_view(), name='users'),
+    path('users/<int:pk>/', views.UserDetailAPI.as_view(), name='user_detail'),
 ]
